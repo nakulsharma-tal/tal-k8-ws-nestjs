@@ -1,0 +1,8 @@
+# Create a new network named "my_network"
+docker network create my_network
+
+# Start inventory service, pass the network as param
+docker run -d -p 3000:3000 --name inventory-container --network my_network inventory-service:latest
+
+# Start order service, pass the network as param,  pass the INVENTORY_URL as env variable
+docker run -d -p 4000:4000 --name order-container --network my_network -e INVENTORY_URL=http://inventory-container:3000 order-service:latest
