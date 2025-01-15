@@ -1,0 +1,34 @@
+name: coffee_shop_app
+
+services:
+  # Inventory service
+  inventory-service:
+    # build:
+    #   context: ./inventory-service
+    #   dockerfile: Dockerfile
+    image: inventory-service:latest
+    container_name: inventory-container-1
+    ports:
+      - "3000:3000"
+    networks:
+      - app_network
+
+  # Order service
+  order-service:
+    depends_on:
+      - inventory-service
+    # build:
+    #   context: ./order-service
+    #   dockerfile: Dockerfile
+    image: order-service:latest
+    container_name: order-container-1
+    environment:
+      INVENTORY_URL: http://inventory-service:3000
+    ports:
+      - "4000:4000"
+    networks:
+      - app_network
+
+networks:
+ app_network:
+   driver: bridge
